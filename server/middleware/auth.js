@@ -20,7 +20,6 @@ async function auth(req,res,next) {
     } catch (error) {
         return res.status(StatusCodes.UNAUTHORIZED).json({ message: "Unauthorized credentials." })
     }
-
 }
 
 export default auth;

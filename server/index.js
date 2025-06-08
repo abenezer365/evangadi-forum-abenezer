@@ -30,8 +30,8 @@ app.get('/', (req, res) => {
 
 //Route Middleware
 app.use('/api/user/', userRoutes)
-app.use('/api/answer/',auth ,answerRoutes)
-app.use('/api/question/',questionRoutes)
+app.use('/api/answer/',auth,answerRoutes)
+app.use('/api/question/',auth,questionRoutes)
 
 
 

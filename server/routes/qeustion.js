@@ -1,6 +1,9 @@
 import express from 'express'
-import { getSingleQuestion } from '../controller/question.js';
+import { getSingleQuestion, postQuestion, getAllQuestion } from '../controller/question.js';
 const router = express.Router()
 
-router.get('/:qid',getSingleQuestion)
+router.post('/', postQuestion)
+router.get('/', getAllQuestion)
+router.get('/:qid', getSingleQuestion)
+
 export default router;

@@ -20,8 +20,8 @@ export async function postAnswer(req,res){
     }
 } 
 export async function getAnswer(req,res){
-    const singleQuestionId = req.query.qid
-     if(!singleQuestionId){
+     const { qid } = req.params;
+     if(!qid){
           return res.status(StatusCodes.NOT_FOUND).json({ message: "Can't find answer for these questions" });
         }
         const selectAnswer = `
@@ -40,7 +40,7 @@ export async function getAnswer(req,res){
 
         
         try {
-            const [answers] = await connection.query(selectAnswer,[singleQuestionId])
+            const [answers] = await connection.query(selectAnswer,[qid])
             console.log(answers)
             return res.status(StatusCodes.OK).json({ message: "Succusfully qeuried answers", Answer: answers });
         

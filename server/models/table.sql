@@ -16,6 +16,7 @@ CREATE TABLE IF NOT EXISTS questions(
     description VARCHAR(255) NOT NULL,
     tag VARCHAR(100) DEFAULT NULL,
     time TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    views INT DEFAULT 0,
     PRIMARY KEY(question_id),
     FOREIGN KEY(user_id) REFERENCES users(user_id) ON DELETE CASCADE ON UPDATE CASCADE
 );
@@ -40,9 +41,6 @@ CREATE TABLE IF NOT EXISTS likes (
     FOREIGN KEY(user_id) REFERENCES users(user_id) ON DELETE CASCADE,
     FOREIGN KEY(question_id) REFERENCES questions(question_id) ON DELETE CASCADE
 );
-
-ALTER TABLE questions ADD views INT DEFAULT 0;
-
 
 CREATE TABLE IF NOT EXISTS question_views (
   user_id INT NOT NULL,

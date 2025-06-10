@@ -1,0 +1,184 @@
+.home{
+    width: 100%;
+    padding: 5vh 10vw;
+    background-image: url(../../assets//backgound_graphics.png);
+    background-size: cover;
+    background-attachment: fixed;
+    /* background-repeat: no-repeat; */
+}
+.head{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+.head span{
+    font-size: 35px;
+}
+.head button{
+    background-color:#415CD3;
+    padding: 10px 50px;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 15px;
+    cursor: pointer;
+}
+.singleQuestion{
+    padding: 20px 20px;
+    display: grid;
+    grid-template-columns: 1fr 5fr 1fr;
+    align-items: center;
+    backdrop-filter: blur(10px);
+    cursor: pointer;
+}
+.likeandcompose {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    align-items: flex-end;
+    transition: all 0.3s ease;
+}
+
+.likeandcompose div {
+    display: flex;
+    gap: 15px;
+    align-items: center;
+}
+
+.likeandcompose p {
+    font-size: 14px;
+    color: #666;
+    font-weight: 500;
+    margin: 0;
+}
+
+.likeandcompose svg {
+    font-size: 34px;
+    padding: 8px;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.likeandcompose svg:first-child {
+    background-color: #f0f2f5;
+    color: #555;
+}
+
+.likeandcompose svg:first-child:hover {
+    background-color: #e4e6eb;
+    transform: scale(1.05);
+}
+
+.likeandcompose svg:last-child {
+    background-color: #415CD3;
+    color: white;
+}
+
+.likeandcompose svg:last-child:hover {
+    background-color: #344aaf;
+}
+
+.liked {
+    background-color: #1877f2 !important;
+    color: white !important;
+}
+
+.like-count {
+    font-size: 14px;
+    font-weight: 500;
+    min-width: 20px;
+    text-align: center;
+}
+
+.stats-container {
+    display: flex;
+    gap: 20px;
+}
+
+.stats-container p {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.stats-container p::before {
+    content: "•";
+    color: #ddd;
+    margin-right: 5px;
+}
+
+.askedby{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.avator {
+    width: 70px;
+  height: 70px;
+  background-color: #004caa;
+  color: white;
+  font-size: 1.5rem;
+  font-weight: bold;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.askedby p{
+    font-size: 15px;
+    opacity: 0.7;
+}
+.home .title{
+    font-size: 20px;
+    font-weight: 500;
+}
+.head p{
+    display: flex;
+    align-items: center;
+}
+
+@media(max-width:700px){
+    .home{
+        background-image: url(../../assets/backgound_graphics_mob.png);
+    }
+    .head button{
+        padding: 10px 20px;
+    }
+    .home .avator{
+        width: 50px;
+        height: 50px;
+        font-size: 1rem;
+    }
+    .home .title{
+        font-size: 15px;
+    }
+    .avator{
+        margin-right: 5px;
+    }
+    .askedby p{
+        font-size: 10px;
+    }
+    .home{
+        background-image: url(../../assets/backgound_graphics_mob.png);
+        background-size: 100%;
+    }
+    .likeandcompose {
+        gap: 10px;
+    }
+    
+    .likeandcompose div {
+        gap: 10px;
+    }
+    
+    .likeandcompose svg {
+        font-size: 20px;
+        padding: 6px;
+    }
+    
+    .stats-container {
+        gap: 10px;
+    }
+}

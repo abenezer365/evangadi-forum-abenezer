@@ -170,3 +170,39 @@ export async function viewCount(req, res) {
   }
 }
 
+export async function myQuestions(req, res) {
+  // return res.status(StatusCodes.OK).json({ message: 'working' 
+  //   });
+  const {user_id} = req.user;
+
+   if (!user_id || isNaN(user_id)) {
+    return res.status(StatusCodes.BAD_REQUEST).json({ 
+      message: 'Invalid user ID' 
+    });
+  }
+
+
+  try {
+   const [data] = await connection.execute(`
+      SELECT q.*, u.username, u.first_name, u.last_name
+      FROM questions q
+      JOIN users u ON q.user_id = u.user_id
+      WHERE q.user_id = ?
+      ORDER BY q.time DESC
+    `, [user_id])
+
+    if (!data.length) {
+      return res.status(StatusCodes.OK).json({ 
+        questions: [],
+        message: 'You have no questions yet' 
+      });
+    }
+    res.status(StatusCodes.OK).json({ questions : data });
+  } catch (err) {
+    console.error('Database error:', err);
+    res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ 
+      message: 'Failed to retrieve questions',
+      error: process.env.NODE_ENV === 'development' ? err.message : null
+    })
+  }
+}

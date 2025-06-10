@@ -37,7 +37,7 @@ app.use('/api/question/',auth,questionRoutes)
 
 async function start() {
   try {
-    await db.query('SELECT 1')
+    await db.execute('SELECT 1')
     console.log('✅ Database connected successfully')
 
     app.listen(PORT, () => {

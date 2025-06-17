@@ -16,6 +16,7 @@ export let questions = `CREATE TABLE IF NOT EXISTS questions(
     description VARCHAR(255) NOT NULL,
     tag VARCHAR(100) DEFAULT NULL,
     time TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    views INT DEFAULT 0,
     PRIMARY KEY(question_id),
     FOREIGN KEY(user_id) REFERENCES users(user_id) ON DELETE CASCADE ON UPDATE CASCADE
 )`;
@@ -31,3 +32,21 @@ export let answers = `CREATE TABLE IF NOT EXISTS answers(
     FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE ON UPDATE CASCADE,
     INDEX index_user_id (user_id)
 )`;
+export let question_views = `CREATE TABLE IF NOT EXISTS question_views (
+  user_id INT NOT NULL,
+  question_id INT NOT NULL,
+  viewed_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (user_id, question_id),
+  FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE,
+  FOREIGN KEY (question_id) REFERENCES questions(question_id) ON DELETE CASCADE
+);`;
+export let likes = `CREATE TABLE IF NOT EXISTS likes (
+    like_id INT AUTO_INCREMENT,
+    user_id INT NOT NULL,
+    question_id INT NOT NULL,
+    time TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY(like_id),
+    UNIQUE(user_id, question_id), 
+    FOREIGN KEY(user_id) REFERENCES users(user_id) ON DELETE CASCADE,
+    FOREIGN KEY(question_id) REFERENCES questions(question_id) ON DELETE CASCADE
+);`;

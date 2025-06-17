@@ -1,6 +1,6 @@
 import mysql from 'mysql2'
 import dotenv from 'dotenv'
-import {users,questions,answers} from '../models/schema.js'
+import {users,questions,answers, likes, question_views} from '../models/schema.js'
 
 dotenv.config()
 
@@ -21,6 +21,9 @@ async function createTables() {
       await db.query(users)
       await db.query(questions)
       await db.query(answers)
+      await db.query(likes)
+      await db.query(question_views)
+      console.log('✅ All tables created succesfully!')
   } catch (err) {
     console.error('❌ Error creating tables:', err.message);
     process.exit(1);

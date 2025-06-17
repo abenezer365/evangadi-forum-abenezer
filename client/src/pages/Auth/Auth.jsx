@@ -21,6 +21,7 @@ function Auth() {
   const emailLoginRef = useRef(null)
   const passwordLoginRef = useRef(null)
   const [showPassword, setShowPassword] = useState(false);
+  const[islogin,setIsLogin] = useState(true)
   //Sign Up Function
 async function signup(e) {
   e.preventDefault()
@@ -33,9 +34,9 @@ async function signup(e) {
       lname : last_nameRef.current.value,
       username : usernameRef.current.value
     })
-    setIsLogin((prev) => !prev)
+    setIsLogin(true)
     } catch (error) {
-    setError(error.response.data.message)
+    setError(error?.response?.data?.error)
     console.log(error)
   }
 }
@@ -47,28 +48,31 @@ async function login(e) {
     const result = await axios.post('/user/login', {
       email : emailLoginRef.current.value,
       password : passwordLoginRef.current.value })
-    const token = result.data.token
-    const username = result.data.user.username
+
+    const token = result?.data?.token
+    const username = result?.data?.user.username
     const user_id = result.data.user.user_id
     localStorage.setItem("token", token)
     localStorage.setItem("username", username )
     localStorage.setItem("user_id", user_id )
+
     const response = await axios.get('/user/check', {
           headers: {
             Authorization: `Bearer ${token}`
           }
         })
-        const userInfo = response.data.user
-        await dispatch({
+        const userInfo = response?.data?.user
+        dispatch({
           type : Type.SET_USER,
           user : userInfo
         })
         navigate('/')
   } catch (error) {
-     setError(error.response.data.message)
+    console.log(error)
+    //  setError(error.response.data.message)
   }
 }
-  function handleShowPassword() {
+function handleShowPassword() {
     setShowPassword((prev)=> !prev)
     if(!showPassword){
       const sound = new Audio(audio);
@@ -76,7 +80,6 @@ async function login(e) {
       sound.play();
     }
   }
- const[islogin,setIsLogin] = useState(true)
  function toggler(e){
   e.preventDefault()
   setIsLogin((prev) => !prev)

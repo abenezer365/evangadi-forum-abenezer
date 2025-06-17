@@ -8,15 +8,14 @@ import { Link } from 'react-router-dom';
 import { ClockLoader } from 'react-spinners';
 import { timeAgo } from '../../../utils/formatter';
 
+
 function Home() {
-  const [likedStatus, setLikedStatus] = useState({});
   const [{ user }] = useContext(Context);
   const [loading, setLoading] = useState(true);
   const [questions, setQuestions] = useState([]);
   const [error, setError] = useState(null);
   const token = localStorage.getItem('token');
 
-  // Fetch all questions
   useEffect(() => {
     (async () => {
       try {
@@ -25,13 +24,6 @@ function Home() {
         });
         const questionData = res.data.questions;
         setQuestions(questionData);
-
-        // Initialize liked status from backend response
-        const initialLikedStatus = {};
-        questionData.forEach(q => {
-          initialLikedStatus[q.question_id] = !!q.liked_by_user;
-        });
-        setLikedStatus(initialLikedStatus);
 
         setError(null);
         setLoading(false);
@@ -44,50 +36,46 @@ function Home() {
     })();
   }, []);
 
-  // Toggle Like/Unlike
-  const handleLike = async (e, questionId) => {
-    e.preventDefault();
-    try {
-      if (!likedStatus[questionId]) {
-        await axios.post(`/question/${questionId}/like`, {}, {
+
+     // Function to handle LIKE toggle
+    const handleLike = async (qid, likedByUser) => {
+      try {
+        if (likedByUser) {
+          // If already liked, unlike
+          await axios.delete(`/question/${qid}/unlike`, {
+            headers: { Authorization: `Bearer ${token}` }
+          });
+        } else {
+          // If not liked yet, like it
+          await axios.post(`/question/${qid}/like`, {}, {
+            headers: { Authorization: `Bearer ${token}` }
+          });
+        }
+
+        // After like/unlike, update UI: fetch questions again (simple)
+        const res = await axios.get('/question/', {
           headers: { Authorization: `Bearer ${token}` },
         });
-      } else {
-        await axios.delete(`/question/${questionId}/unlike`, {
-          headers: { Authorization: `Bearer ${token}` },
-        });
+        setQuestions(res.data.questions);
+      } catch (error) {
+        console.error('Failed to like/unlike:', error);
       }
+    };
 
-      // Update UI
-      setQuestions(prev =>
-        prev.map(q =>
-          q.question_id === questionId
-            ? {
-                ...q,
-                likes_count: q.likes_count + (likedStatus[questionId] ? -1 : 1),
-              }
-            : q
-        )
-      );
-      setLikedStatus(prev => ({
-        ...prev,
-        [questionId]: !prev[questionId],
-      }));
-    } catch (err) {
-      console.error('Error toggling like:', err);
-    }
-  };
+    // Function to handle VIEW count
+    const handleView = async (qid) => {
+      try {
+        await axios.post(`/question/${qid}/view`, {}, {
+          headers: { Authorization: `Bearer ${token}` }
+        });
+      } catch (error) {
+        console.error('Failed to record view:', error);
+      }
+    };
 
-  // Add view on click
-  const handleView = async questionId => {
-    try {
-      await axios.post(`/question/${questionId}/view`, {}, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-    } catch (err) {
-      console.error('Error updating view:', err);
-    }
-  };
+
+
+
 
   if (loading)
     return (
@@ -121,6 +109,7 @@ function Home() {
             <div key={item.question_id}>
               <Link
                 to={`/question/${item.question_id}`}
+                onClick={() => handleView(item.question_id)} 
               >
                 <div className={css.singleQuestion}>
                   <div className={css.askedby}>
@@ -131,15 +120,15 @@ function Home() {
                   <div className={css.likeandcompose}>
                     <div>
                       <AiOutlineLike
-                        onClick={e => handleLike(e, item.question_id)}
-                        className={
-                          likedStatus[item.question_id] ? css.liked : css.disliked
-                        }
-                      />
-                      <span>{item.likes_count || 0}</span>
+                      className={item?.liked_by_user === 1 && css.liked}
+                      onClick={(e) => {
+                        e.preventDefault();
+                        handleLike(item.question_id, item.liked_by_user);
+                      }}/>
+                      <span>{item.likes_count}</span>
                       <BiEditAlt />
                     </div>
-                    <p>Views: {item.views || 0}</p>
+                    <p>Views:{item.views}</p>
                     <p>{timeAgo(item.time)}</p>
                   </div>
                 </div>
